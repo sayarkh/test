@@ -3,6 +3,7 @@ package com.example.calculator
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -12,20 +13,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultsTV: TextView
     private var canAddOperation = false
     private var canAddDecimal = true
+    private var commaPosition = 0
+    private lateinit var equalsButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        equalsButton = findViewById(R.id.equalsButton)
         workingsTV = findViewById(R.id.workingsTV)
         resultsTV = findViewById(R.id.resultsTV)
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-
     }
+
 
     fun numberAction(view: View) {
         if(view is Button) {
-            if (view.text == ",") {
+            if (view.text == ".") {
                 if(canAddDecimal) {
                     workingsTV.append(view.text)
                     canAddDecimal = false
@@ -47,15 +50,15 @@ class MainActivity : AppCompatActivity() {
     fun allClearAction(view: View) {
         workingsTV.text = ""
         resultsTV.text = ""
+        canAddDecimal = true
     }
     fun equalsAction(view: View) {
         resultsTV.text = calculateResults()
-    }
+        }
 
     private fun calculateResults(): String {
         val digitsOperators = digitsOperators()
         if (digitsOperators.isEmpty()) return ""
-
         val timesDivision = timesDivisionCalculate(digitsOperators)
         if (timesDivision.isEmpty()) return ""
         val result = addSubtractCalculate(timesDivision)
@@ -94,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                 val operator = passedList[i]
                 val prevDigit = passedList[i - 1] as Float
                 val nextDigit = passedList[i + 1] as Float
+                Log.d("error", "$prevDigit")
                 when(operator) {
                     'x' -> {
                         newList.add(prevDigit * nextDigit)
@@ -121,14 +125,15 @@ class MainActivity : AppCompatActivity() {
         for(character in workingsTV.text) {
             if(character.isDigit() || character == '.') {
                 currentDigit += character
-            } else {
+            }
+            else {
                 list.add(currentDigit.toFloat())
                 currentDigit = ""
                 list.add(character)
             }
         }
 
-        if(currentDigit != "") {
+        if(currentDigit != "" && currentDigit != ".") {
             list.add(currentDigit.toFloat())
         }
         return list
@@ -138,6 +143,7 @@ class MainActivity : AppCompatActivity() {
         val length = workingsTV.length()
         if(length > 0) {
             workingsTV.text = workingsTV.text.subSequence(0, length-1)
+            canAddDecimal = true
         }
     }
 
@@ -154,6 +160,4 @@ class MainActivity : AppCompatActivity() {
         resultsTV.text = savedInstanceState?.getString("KEY")
         super.onRestoreInstanceState(savedInstanceState)
     }
-
-
 }

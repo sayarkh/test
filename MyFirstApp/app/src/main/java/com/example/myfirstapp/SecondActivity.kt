@@ -49,12 +49,6 @@ class SecondActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
     }
 
-
-
-
-
-
-
     override fun onResume() {
         super.onResume()
         Log.i("SecondActivity", "onResume called")

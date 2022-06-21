@@ -134,6 +134,7 @@
             style="@style/btnNumber"
             android:text="."/>
         <Button
+            android:id="@+id/equalsButton"
             style="@style/btnNumber"
             android:text="="
             android:onClick="equalsAction"

@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val myToast = Toast.makeText(this, "Hello, Toast", Toast.LENGTH_SHORT)
         myToast.show()
     }
+
     fun randomMe(view: View) {
         val randomIntent = Intent(this, SecondActivity::class.java)
         val textValue = counter.text.toString()
